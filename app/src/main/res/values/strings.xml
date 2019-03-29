@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Pronto-Emplo</string>
+    <string name="name">Username</string>
+    <string name="pwd">Password</string>
+    <string name="title_activity_home_screen">Home_screen</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="minimum_password">Password too short</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="Forgot_Password">Forgot Password</string>
+    <string name="Submit">reset Password</string>
+    <string name="Join_Us">Join Us</string>
+    <string name="Sign_In">Sign In</string>
+    <string name="Occupation">Occupation</string>
+ </resources>
