@@ -114,6 +114,8 @@ public class FirstPage extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                                             final String job=postSnapshot.child("Occupation").getValue(String.class);
                                             final String location=postSnapshot.child("Location").getValue(String.class);
+                                            final String name=postSnapshot.child("Name").getValue(String.class);
+                                            final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
 
 
@@ -127,7 +129,9 @@ public class FirstPage extends AppCompatActivity {
                                                     myRef1.child(job).child(number1+"").child("User").setValue(email);
 
                                                     myRef1.child(job).child(number1+"").child("Loc").setValue(location);
-                                                    myRef1.child(job).child(number1+"").child("AvailableNow").setValue("Online");
+                                                    //myRef1.child(job).child(number1+"").child("AvailableNow").setValue("Online");
+                                                    myRef1.child(job).child(number1+"").child("Emp_Name").setValue(name);
+                                                    myRef1.child(job).child(number1+"").child("Phone_Number").setValue(phone);
                                                     myRef1.child(job).child(number1+"").onDisconnect().removeValue();
 
                                                     //if(myRef1.child())
@@ -141,6 +145,8 @@ public class FirstPage extends AppCompatActivity {
                                             });
 
                                             Intent intent = new Intent(FirstPage.this, Home_screen.class);
+
+                                            intent.putExtra("for_user",uname);
                                             startActivity(intent);
                                             finish();
                                         }

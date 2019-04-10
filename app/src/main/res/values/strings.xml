@@ -8,7 +8,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="minimum_password">Password too short</string>
     <string name="auth_failed">Authentication failed</string>
-    <string name="Forgot_Password">Forgot Password</string>
+    <string name="Forgot_Password">Forgot Password?</string>
     <string name="Submit">reset Password</string>
     <string name="Join_Us">Join Us</string>
     <string name="Sign_In">Sign In</string>
