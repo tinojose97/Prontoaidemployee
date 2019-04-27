@@ -24,7 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 
@@ -110,7 +114,6 @@ public class FirstPage extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             flag = 1;
                                             progressDialog.dismiss();
-
                                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                                             final String job=postSnapshot.child("Occupation").getValue(String.class);
                                             final String location=postSnapshot.child("Location").getValue(String.class);
@@ -118,24 +121,31 @@ public class FirstPage extends AppCompatActivity {
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
 
-
                                             myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    int number1 = (int)dataSnapshot.child(job).getChildrenCount();
-                                                    number1++;
+                                                    //int number1 = (int)dataSnapshot.child(job).getChildrenCount();
+                                                    //number1++;
                                                     //myRef=myRef.getParent();
-
+                                                    /*
                                                     myRef1.child(job).child(number1+"").child("User").setValue(email);
-
                                                     myRef1.child(job).child(number1+"").child("Loc").setValue(location);
                                                     //myRef1.child(job).child(number1+"").child("AvailableNow").setValue("Online");
                                                     myRef1.child(job).child(number1+"").child("Emp_Name").setValue(name);
                                                     myRef1.child(job).child(number1+"").child("Phone_Number").setValue(phone);
-                                                    myRef1.child(job).child(number1+"").onDisconnect().removeValue();
+                                                    myRef1.push().key;
+                                                    */
+                                                    String uid = myRef1.push().getKey();
+                                                    Map data = new HashMap();
+                                                    data.put("User", email);
+                                                    data.put("Loc", location);
+                                                    data.put("Emp_Name", name);
+                                                    data.put("Phone_Number", phone);
+                                                    myRef1.child(job).child(uid).setValue(data);
 
+                                                    //myRef1.child(job).push({"User": "Hello", "Name": "World" });
+                                                    myRef1.child(job).child(uid).onDisconnect().removeValue();
                                                     //if(myRef1.child())
-
                                                     //int number2=(int)dataSnapshot.getChildrenCount();
                                                     //int number2=(int)dataSnapshot.getParent().child("Jobs").getChildre
                                                 }
@@ -169,8 +179,6 @@ public class FirstPage extends AppCompatActivity {
                     }
 
                 });
-
-
             }
         });
 
@@ -180,7 +188,5 @@ public class FirstPage extends AppCompatActivity {
                 startActivity(new Intent(FirstPage.this, PasswordActivity.class));
             }
         });
-
-
     }
 }
