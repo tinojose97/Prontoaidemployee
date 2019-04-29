@@ -41,20 +41,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "31572189943-hgo3k5647opnet3upuuaa4ejd82jb1ev.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     },
@@ -75,6 +68,14 @@
           }
         },
         {
+          "client_id": "31572189943-m49pgo7lqt6bvh10es3c65iehbpriim6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prontoaidemployee",
+            "certificate_hash": "7b030a04f85363296f2f5ac6cdba3f2c9fec0eea"
+          }
+        },
+        {
           "client_id": "31572189943-hgo3k5647opnet3upuuaa4ejd82jb1ev.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -85,20 +86,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "31572189943-hgo3k5647opnet3upuuaa4ejd82jb1ev.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

@@ -83,7 +83,7 @@
         android:ems="10"
         android:hint="username"
         android:inputType="textEmailAddress"
-        android:text="shiva@gmail.com" />
+        android:text="tintumon@gmail.com" />
 
     <TextView
         android:id="@+id/textView2"
