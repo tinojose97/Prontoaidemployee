@@ -3,6 +3,7 @@ package com.example.prontoaidemployee;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,7 +46,6 @@ public class FirstPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("Customer");
 
@@ -62,6 +62,7 @@ public class FirstPage extends AppCompatActivity {
     }
 
     public void addListenerOnButton() {
+        final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         flag = 0;
         final Context context = this;
         progressDialog = new ProgressDialog(this);
@@ -78,6 +79,7 @@ public class FirstPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String email = iemail.getText().toString();
+                ref_pic.edit().putString("username",email).commit();
                 final String password = ipassword.getText().toString();
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
@@ -120,7 +122,7 @@ public class FirstPage extends AppCompatActivity {
                                             final String name=postSnapshot.child("Name").getValue(String.class);
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
-
+                                            ref_pic.edit().putString("name",name).commit();
                                             myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
