@@ -75,7 +75,7 @@ public class Home_screen extends AppCompatActivity {
                     TextView e4 = (TextView) findViewById(R.id.message);
                     e4.setVisibility(View.VISIBLE);
                     mTextMessage = (TextView) findViewById(R.id.message);
-                    mTextMessage.setText("Welcome ");
+                    mTextMessage.setText("Welcome "+username);
                     Button m = (Button) findViewById(R.id.docupload);
                     Button map = (Button) findViewById(R.id.map);
                     map.setVisibility(View.GONE);
@@ -93,10 +93,11 @@ public class Home_screen extends AppCompatActivity {
                 case R.id.navigation_notification:
                     //mTextMessage.setVisibility(View.VISIBLE);
                     //TextView e5 = (TextView) findViewById(R.id.message);
-                    mTextMessage = (TextView) findViewById(R.id.message);
-                    mTextMessage.setVisibility(View.VISIBLE);
-                    mTextMessage = (TextView) findViewById(R.id.message);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
                     mTextMessage.setText(noty_msg);
+                    mTextMessage.setVisibility(View.VISIBLE);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
+
                     Button m1 = (Button) findViewById(R.id.docupload);
                     m1.setVisibility(View.GONE);
                     Button map1 = (Button) findViewById(R.id.map);
@@ -149,19 +150,21 @@ public class Home_screen extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.i("Listening for",dataSnapshot.getValue().toString());
-                if (dataSnapshot.getValue().toString().equals("1")){
+                //Log.i("Listening for",dataSnapshot.getValue().toString());
+                /*if (dataSnapshot.getValue().toString().equals("1")){
                     progressDialog.setMessage("Obtaining location");
                     progressDialog.show();
+
                     locationListenSet();
-                    myRef1=database.getReference("Workers");
-                    //myRef1=myRef1.child(job);
+                    myRef1=database.getReference("Jobs");
+                    myRef1=myRef1.child(job);
                     myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren() ){
                                 Log.i("Username Test",email);
                                 if (postSnapshot.child("Username").getValue().toString().equals(email)){
+
                                     myRef1.child(postSnapshot.getKey()).child("Latitude").setValue(latitude+"");
                                     myRef1.child(postSnapshot.getKey()).child("Longitude").setValue(longitude+"");
                                 }
@@ -174,7 +177,7 @@ public class Home_screen extends AppCompatActivity {
                         }
                     });
 
-                }
+                }*/
             }
 
             @Override
@@ -183,6 +186,9 @@ public class Home_screen extends AppCompatActivity {
             }
         });
         setContentView(R.layout.activity_home_screen);
+        mTextMessage = (TextView) findViewById(R.id.message);
+        mTextMessage.setText("Welcome "+username);
+
 
         //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
