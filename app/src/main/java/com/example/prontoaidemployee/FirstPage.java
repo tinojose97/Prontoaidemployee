@@ -1,10 +1,13 @@
 package com.example.prontoaidemployee;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,6 +48,7 @@ public class FirstPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        askPermission();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("Customer");
@@ -159,6 +163,7 @@ public class FirstPage extends AppCompatActivity {
                                             Intent intent = new Intent(FirstPage.this, Home_screen.class);
 
                                             intent.putExtra("for_user",uname);
+                                            intent.putExtra("for_job",job);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -190,5 +195,32 @@ public class FirstPage extends AppCompatActivity {
                 startActivity(new Intent(FirstPage.this, PasswordActivity.class));
             }
         });
+    }
+
+    void askPermission()
+    {
+        try {
+            if (ActivityCompat.checkSelfPermission(FirstPage.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {//Checking permission
+
+
+            } else {
+
+                ActivityCompat.requestPermissions(FirstPage.this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION},99);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Toast.makeText(this,"Permission Granted",Toast.LENGTH_LONG).show();
+
     }
 }

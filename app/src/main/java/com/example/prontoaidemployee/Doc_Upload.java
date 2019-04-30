@@ -30,20 +30,21 @@ import java.util.List;
 public class Doc_Upload extends AppCompatActivity implements View.OnClickListener /*  implementing click listener */ {
     //a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
+    private static final int PICK_IMAGE_REQUEST2 = 123;
     String username,name;
     //Buttons
     private Button buttonChoose;
     private Button buttonUpload;
-    //private Button buttonChoose2;
-    //private Button buttonUpload2;
+    private Button buttonChoose2;
+    private Button buttonUpload2;
 
     //ImageView
     private ImageView imageView;
-    //private ImageView imageView2;
+    private ImageView imageView2;
 
     //a Uri object to store file path
     private Uri filePath;
-    //private Uri filePath2;
+    private Uri filePath2;
 
     //firebase storage reference
     private StorageReference storageReference;
@@ -68,13 +69,18 @@ public class Doc_Upload extends AppCompatActivity implements View.OnClickListene
         //getting views from layout
         buttonChoose = (Button) findViewById(R.id.buttonChoose);
         buttonUpload = (Button) findViewById(R.id.buttonUpload);
+        buttonChoose2 = (Button) findViewById(R.id.buttonChoose2);
+        buttonUpload2 = (Button) findViewById(R.id.buttonUpload2);
         //but = (Button) findViewById(R.id.but);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        imageView2 = (ImageView) findViewById(R.id.imageView2);
 
         //attaching listener
         buttonChoose.setOnClickListener(this);
         buttonUpload.setOnClickListener(this);
+        buttonChoose2.setOnClickListener(this);
+        buttonUpload2.setOnClickListener(this);
         //but.setOnClickListener(this);
 
         //getting firebase storage reference
@@ -106,16 +112,39 @@ public class Doc_Upload extends AppCompatActivity implements View.OnClickListene
                 e.printStackTrace();
             }
         }
+        else {
+            filePath2 = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath2);
+                imageView2.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
     }
+    private void showFileChooser2() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST2);
+    }
+
+    //handling the image chooser activity result
+
 
     //this method will upload the file
     private void uploadFile() {
         //if there is a file to upload
-        if (filePath != null) {
+        if (filePath != null ) {
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
+
 
             StorageReference riversRef = storageReference.child("images/"+username+".jpg");
             riversRef.putFile(filePath)
@@ -153,8 +182,46 @@ public class Doc_Upload extends AppCompatActivity implements View.OnClickListene
                     });
         }
         //if there is not any file
-        else {
-            //you can display an error toast
+        if (filePath2 != null) {
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+
+            StorageReference riversRef = storageReference.child("images/"+name+" doc.jpg");
+            riversRef.putFile(filePath2)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //if the upload is successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying a success toast
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            //if the upload is not successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
         }
     }
 
@@ -166,6 +233,13 @@ public class Doc_Upload extends AppCompatActivity implements View.OnClickListene
         }
         //if the clicked button is upload
         else if (view == buttonUpload) {
+            uploadFile();
+        }
+        if (view == buttonChoose2) {
+            showFileChooser2();
+        }
+        //if the clicked button is upload
+        else if (view == buttonUpload2) {
             uploadFile();
         }
 

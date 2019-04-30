@@ -13,4 +13,7 @@
     <string name="Join_Us">Join Us</string>
     <string name="Sign_In">Sign In</string>
     <string name="Occupation">Occupation</string>
+    <string name="open_in_map">Open In Map</string>
+    <string name="profile_verification">Profile Verification</string>
+    <string name="Welcome">Welcome</string>
 </resources>
