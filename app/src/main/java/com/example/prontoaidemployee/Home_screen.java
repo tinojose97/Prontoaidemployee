@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +27,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Home_screen extends AppCompatActivity {
@@ -32,7 +38,7 @@ public class Home_screen extends AppCompatActivity {
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
-    String wname,uname,noty_msg,cusname,cusnum,job;
+    String wname,uname,noty_msg,cusname,cusnum,job,address;
     double cuslat,cuslong;
 
     ProgressDialog progressDialog;
@@ -61,7 +67,8 @@ public class Home_screen extends AppCompatActivity {
                             cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);
                             cuslat =Double.parseDouble(postSnapshot.child("Customer_Latitude").getValue(String.class));
                             cuslong=Double.parseDouble(postSnapshot.child("Customer_Longitude").getValue(String.class));
-                            noty_msg = "You're service has been requested by"+cusname+" \nContact: "+cusnum;
+                            address=getAddress(cuslat,cuslong);
+                            noty_msg = "You're service has been requested by "+cusname+" at "+address+" \nContact: "+cusnum;
                             notyflag=1;
                         }
 
@@ -192,6 +199,33 @@ public class Home_screen extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(Home_screen.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String add = obj.getAddressLine(0);
+            /*add = add + "\n" + obj.getCountryName();
+            add = add + "\n" + obj.getCountryCode();
+            add = add + "\n" + obj.getAdminArea();
+            add = add + "\n" + obj.getPostalCode();
+            add = add + "\n" + obj.getSubAdminArea();
+            add = add + "\n" + obj.getLocality();
+            add = add + "\n" + obj.getSubThoroughfare();*/
+
+            //Log.v("IGA", "Address" + add);
+            return add;
+            // Toast.makeText(this, "Address=>" + add,
+            // Toast.LENGTH_SHORT).show();
+
+            // TennisAppActivity.showDialog(add);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
 
 }
 
