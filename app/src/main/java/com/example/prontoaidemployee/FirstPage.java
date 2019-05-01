@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import static android.content.ContentValues.TAG;
 import javax.security.auth.Subject;
 
 public class FirstPage extends AppCompatActivity {
@@ -43,13 +45,21 @@ public class FirstPage extends AppCompatActivity {
     private TextView ForgotPassword;
     int flag = 0, number;
     ProgressDialog progressDialog;
+    Double latitude,longitude;
+
+    public LocationManager mLocationManager = null;
+    Context context;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         askPermission();
-
+        progressDialog=new ProgressDialog(this);
+        locationListenSet();
+        progressDialog.setMessage("Setting Your Location");
+        progressDialog.show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("Customer");
 
@@ -69,7 +79,7 @@ public class FirstPage extends AppCompatActivity {
         final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         flag = 0;
         final Context context = this;
-        progressDialog = new ProgressDialog(this);
+        //progressDialog = new ProgressDialog(this);
         r = (Button) findViewById(R.id.signinbtn);
         l = (Button) findViewById(R.id.joinus);
         l.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +104,8 @@ public class FirstPage extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                progressDialog.setMessage("Loading");
-                progressDialog.show();
+                //progressDialog.setMessage("Loading");
+                //progressDialog.show();
                 Auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(FirstPage.this, new OnCompleteListener<AuthResult>() {
                     public void onComplete(@NonNull final Task<AuthResult> task) {
 
@@ -119,7 +129,7 @@ public class FirstPage extends AppCompatActivity {
                                         //Log.i("Test4",flag+"");
                                         if (task.isSuccessful()) {
                                             flag = 1;
-                                            progressDialog.dismiss();
+                                            //progressDialog.dismiss();
                                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                                             final String job=postSnapshot.child("Occupation").getValue(String.class);
                                             final String location=postSnapshot.child("Location").getValue(String.class);
@@ -147,7 +157,13 @@ public class FirstPage extends AppCompatActivity {
                                                     data.put("Loc", location);
                                                     data.put("Emp_Name", name);
                                                     data.put("Phone_Number", phone);
+                                                    data.put("Loclatitude",latitude+"");
+                                                    data.put("Loclongitude",longitude+"");
                                                     myRef1.child(job).child(uid).setValue(data);
+                                                    SharedPreferences.Editor refedit= ref_pic.edit();
+                                                    refedit.putString("Latitude",latitude+"");
+                                                    refedit.putString("Longitude",longitude+"");
+                                                    refedit.commit();
 
                                                     //myRef1.child(job).push({"User": "Hello", "Name": "World" });
                                                     myRef1.child(job).child(uid).onDisconnect().removeValue();
@@ -174,7 +190,7 @@ public class FirstPage extends AppCompatActivity {
 
                                 }
                                 if (flag == 0) {
-                                    progressDialog.dismiss();
+                                    //progressDialog.dismiss();
                                     Toast.makeText(FirstPage.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -197,6 +213,110 @@ public class FirstPage extends AppCompatActivity {
         });
     }
 
+    void locationListenSet()
+    {
+        initializeLocationManager();
+        LocationListener[] mLocationListeners = new FirstPage.LocationListener[]{
+
+                new FirstPage.LocationListener(LocationManager.GPS_PROVIDER),
+                new LocationListener(LocationManager.NETWORK_PROVIDER)
+        };
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 100, 10f,
+                    mLocationListeners[1]);
+        } catch (java.lang.SecurityException ex) {
+            Log.e(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "network provider does not exist, " + ex.getMessage());
+        }
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,100, 10f,
+                    mLocationListeners[0]);
+        } catch (java.lang.SecurityException ex) {
+            Log.e(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "gps provider does not exist " + ex.getMessage());
+        }
+
+    }
+
+    private void initializeLocationManager() {
+        Log.e(TAG, "initializeLocationManager");
+        if (mLocationManager == null) {
+            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        }
+    }
+
+    public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
+    public int calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
+
+        double latDistance = Math.toRadians(userLat - venueLat);
+        double lngDistance = Math.toRadians(userLng - venueLng);
+
+        double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
+                (Math.cos(Math.toRadians(userLat))) *
+                        (Math.cos(Math.toRadians(venueLat))) *
+                        (Math.sin(lngDistance / 2)) *
+                        (Math.sin(lngDistance / 2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
+
+    }
+
+    public class LocationListener implements android.location.LocationListener {
+        public Location mLastLocation;
+        int i = 0;
+
+        public LocationListener(String provider) {
+            Log.e(TAG, "LocationListener " + provider);
+            mLastLocation = new Location(provider);
+
+        }
+
+        @Override
+        public void onLocationChanged(Location location)
+        {
+
+
+            latitude=location.getLatitude();
+            longitude=location.getLongitude();
+            progressDialog.dismiss();
+
+            final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
+            SharedPreferences.Editor refedit= ref_pic.edit();
+            refedit.putString("Latitude",latitude+"");
+            refedit.putString("Longitude",longitude+"");
+            refedit.commit();
+
+            //Log.i("Latitude",latitude+"");
+            //Log.i("Longitude",longitude+"");
+            //progressDialog.dismiss();
+        }
+
+
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(TAG, "onProviderDisabled: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " + provider);
+        }
+
+
+
+    }
     void askPermission()
     {
         try {
@@ -223,4 +343,5 @@ public class FirstPage extends AppCompatActivity {
         Toast.makeText(this,"Permission Granted",Toast.LENGTH_LONG).show();
 
     }
+
 }

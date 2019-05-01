@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -23,14 +24,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class Home_screen extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef,myRef1;
     Button m,map;
+    Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
     String wname,uname,noty_msg,cusname,cusnum,cusloc,job;
-    LocationManager mLocationManager;
-    Double latitude,longitude;
+
     ProgressDialog progressDialog;
     private TextView mTextMessage;
 
@@ -145,13 +148,16 @@ public class Home_screen extends AppCompatActivity {
         final SharedPreferences user=getSharedPreferences("picdtata" , MODE_PRIVATE);
         username=user.getString("name","null");
         email=user.getString("username","null");
-        myRef=database.getReference("UpdateLocation");
+        //Log.i("Latitude",user.getString("Latitude","null"));
+        Latitude=Double.parseDouble(user.getString("Latitude","null"));
+        Longitude=Double.parseDouble(user.getString("Longitude", "null"));
+        /*myRef=database.getReference("UpdateLocation");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //Log.i("Listening for",dataSnapshot.getValue().toString());
-                /*if (dataSnapshot.getValue().toString().equals("1")){
+                if (dataSnapshot.getValue().toString().equals("1")){
                     progressDialog.setMessage("Obtaining location");
                     progressDialog.show();
 
@@ -177,14 +183,14 @@ public class Home_screen extends AppCompatActivity {
                         }
                     });
 
-                }*/
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
         setContentView(R.layout.activity_home_screen);
         mTextMessage = (TextView) findViewById(R.id.message);
         mTextMessage.setText("Welcome "+username);
@@ -209,90 +215,18 @@ public class Home_screen extends AppCompatActivity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Home_screen.this, Doc_Upload.class);
-                startActivity(intent);
+                goToGoogleMap(Latitude, Longitude,10.004162, 76.312702);
             }
         });
 
 
 
+
     }
-    void locationListenSet()
+    void goToGoogleMap(double userLat, double userLng, double venueLat, double venueLng)
     {
-        initializeLocationManager();
-        LocationListener[] mLocationListeners = new Home_screen.LocationListener[]{
-
-                new Home_screen.LocationListener(LocationManager.GPS_PROVIDER),
-                new LocationListener(LocationManager.NETWORK_PROVIDER)
-        };
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 100, 10f,
-                    mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.e(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.e(TAG, "network provider does not exist, " + ex.getMessage());
-        }
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,100, 10f,
-                    mLocationListeners[0]);
-        } catch (java.lang.SecurityException ex) {
-            Log.e(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.e(TAG, "gps provider does not exist " + ex.getMessage());
-        }
-
-    }
-
-    private void initializeLocationManager() {
-        Log.e(TAG, "initializeLocationManager");
-        if (mLocationManager == null) {
-            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        }
-    }
-    public class LocationListener implements android.location.LocationListener {
-        public Location mLastLocation;
-        int i = 0;
-
-        public LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-
-        }
-
-        @Override
-        public void onLocationChanged(Location location)
-        {
-
-
-            latitude=location.getLatitude();
-            longitude=location.getLongitude();
-            progressDialog.dismiss();
-            Log.i("Latitude",latitude+"");
-            Log.i("Longitude",longitude+"");
-
-        }
-
-
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
-
-
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr="+userLat+","+userLng+"&daddr="+venueLat+","+venueLng));
+        startActivity(intent);
     }
 
 
