@@ -32,7 +32,8 @@ public class Home_screen extends AppCompatActivity {
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
-    String wname,uname,noty_msg,cusname,cusnum,cusloc,job;
+    String wname,uname,noty_msg,cusname,cusnum,job;
+    double cuslat,cuslong;
 
     ProgressDialog progressDialog;
     private TextView mTextMessage;
@@ -58,8 +59,9 @@ public class Home_screen extends AppCompatActivity {
                         if (uname.equals(wname)) {
                             cusname = postSnapshot.child("Customer_Name").getValue(String.class);
                             cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);
-                            cusloc = postSnapshot.child("Customer_Location").getValue(String.class);
-                            noty_msg = "You have been assigned to "+cusname+" at "+cusloc+"\n"+"Contact: "+cusnum;
+                            cuslat =Double.parseDouble(postSnapshot.child("Customer_Latitude").getValue(String.class));
+                            cuslong=Double.parseDouble(postSnapshot.child("Customer_Longitude").getValue(String.class));
+                            noty_msg = "You're service has been requested by"+cusname+" \nContact: "+cusnum;
                             notyflag=1;
                         }
 
@@ -151,46 +153,7 @@ public class Home_screen extends AppCompatActivity {
         //Log.i("Latitude",user.getString("Latitude","null"));
         Latitude=Double.parseDouble(user.getString("Latitude","null"));
         Longitude=Double.parseDouble(user.getString("Longitude", "null"));
-        /*myRef=database.getReference("UpdateLocation");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //Log.i("Listening for",dataSnapshot.getValue().toString());
-                if (dataSnapshot.getValue().toString().equals("1")){
-                    progressDialog.setMessage("Obtaining location");
-                    progressDialog.show();
-
-                    locationListenSet();
-                    myRef1=database.getReference("Jobs");
-                    myRef1=myRef1.child(job);
-                    myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren() ){
-                                Log.i("Username Test",email);
-                                if (postSnapshot.child("Username").getValue().toString().equals(email)){
-
-                                    myRef1.child(postSnapshot.getKey()).child("Latitude").setValue(latitude+"");
-                                    myRef1.child(postSnapshot.getKey()).child("Longitude").setValue(longitude+"");
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
         setContentView(R.layout.activity_home_screen);
         mTextMessage = (TextView) findViewById(R.id.message);
         mTextMessage.setText("Welcome "+username);
@@ -215,7 +178,7 @@ public class Home_screen extends AppCompatActivity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToGoogleMap(Latitude, Longitude,10.004162, 76.312702);
+                goToGoogleMap(Latitude, Longitude,cuslat, cuslong);
             }
         });
 
