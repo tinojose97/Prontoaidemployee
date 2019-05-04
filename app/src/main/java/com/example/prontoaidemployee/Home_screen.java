@@ -180,8 +180,29 @@ public class Home_screen extends AppCompatActivity {
         if (notyflag==0) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("Setting Your Location");
-            locationListenSet();
             progressDialog.show();
+            locationListenSet();
+
+            myRef1 = database.getReference("Jobs");
+            myRef1=myRef1.child(job);
+            myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                        if (email.equals(postSnapshot.child("User").getValue(String.class))){
+                            Log.d("Found user",postSnapshot.getKey());
+                            //progressDialog.dismiss();
+                            myRef1.child(postSnapshot.getKey()).child("Loclatitude").setValue(Latitude+"");
+                            myRef1.child(postSnapshot.getKey()).child("Loclongitude").setValue(Longitude+"");
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -295,26 +316,9 @@ public class Home_screen extends AppCompatActivity {
             Latitude=location.getLatitude();
             Longitude=location.getLongitude();
             progressDialog.dismiss();
+            //progressDialog.show();
 
-            myRef1 = database.getReference("Jobs");
-            myRef1=myRef1.child(job);
-            myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                        if ((postSnapshot.child("User").getValue(String.class)).equals(email)){
-                            Log.d("Found user",postSnapshot.getKey());
-                            myRef1.child(postSnapshot.getKey()).child("Loclatitude").setValue(Latitude+"");
-                            myRef1.child(postSnapshot.getKey()).child("Loclongitude").setValue(Longitude+"");
-                        }
-                    }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
             //Log.i("Latitude",latitude+"");
             //Log.i("Longitude",longitude+"");
             //progressDialog.dismiss();
