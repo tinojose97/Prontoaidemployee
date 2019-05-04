@@ -30,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
+
 
 public class Home_screen extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -38,11 +38,13 @@ public class Home_screen extends AppCompatActivity {
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
-    String wname,uname,noty_msg,cusname,cusnum,job,address;
+    String wname,uname,noty_msg="No active jobs",cusname,cusnum,job,address;
     double cuslat,cuslong;
-
+    int notyflag=0;
     ProgressDialog progressDialog;
     private TextView mTextMessage;
+    public LocationManager mLocationManager = null;
+
 
 
 
@@ -52,12 +54,10 @@ public class Home_screen extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             myRef = database.getReference("Assigned");
-
-
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    int notyflag=0;
+                    notyflag=0;
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                         wname = postSnapshot.child("Worker_User").getValue(String.class);
@@ -69,13 +69,12 @@ public class Home_screen extends AppCompatActivity {
                             cuslong=Double.parseDouble(postSnapshot.child("Customer_Longitude").getValue(String.class));
                             address=getAddress(cuslat,cuslong);
                             noty_msg = "You're service has been requested by "+cusname+" at "+address+" \nContact: "+cusnum;
+                            //tid=postSnapshot.getKey();
                             notyflag=1;
                         }
-
                     }
                     if (notyflag==0)
                         noty_msg="No active jobs";
-
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -98,11 +97,10 @@ public class Home_screen extends AppCompatActivity {
                     TextView e = (TextView) findViewById(R.id.textView6);
                     n.setVisibility(View.GONE);
                     e.setVisibility(View.GONE);
-
-
-
                     return true;
+
                 case R.id.navigation_notification:
+                    Button bloc=(Button) findViewById(R.id.gpssetter);
                     //mTextMessage.setVisibility(View.VISIBLE);
                     //TextView e5 = (TextView) findViewById(R.id.message);
                     //mTextMessage = (TextView) findViewById(R.id.message);
@@ -113,7 +111,14 @@ public class Home_screen extends AppCompatActivity {
                     Button m1 = (Button) findViewById(R.id.docupload);
                     m1.setVisibility(View.GONE);
                     Button map1 = (Button) findViewById(R.id.map);
-                    map1.setVisibility(View.VISIBLE);
+                    if (notyflag==1) {
+                        map1.setVisibility(View.VISIBLE);
+                        bloc.setVisibility(View.GONE);
+                        }
+                    else {
+                        map1.setVisibility(View.GONE);
+                        bloc.setVisibility(View.VISIBLE);
+                        }
                     ImageView i2 = (ImageView) findViewById(R.id.imageView2);
                     i2.setVisibility(View.GONE);
                     TextView n1 = (TextView) findViewById(R.id.textView5);
@@ -134,15 +139,10 @@ public class Home_screen extends AppCompatActivity {
                     e2.setText(email);
                     n2.setVisibility(View.VISIBLE);
                     e2.setVisibility(View.VISIBLE);
-
-
-
                     TextView e3 = (TextView) findViewById(R.id.message);
                     e3.setVisibility(View.GONE);
                     Button map2 = (Button) findViewById(R.id.map);
                     map2.setVisibility(View.GONE);
-
-
                     return true;
             }
             return false;
@@ -157,6 +157,7 @@ public class Home_screen extends AppCompatActivity {
         final SharedPreferences user=getSharedPreferences("picdtata" , MODE_PRIVATE);
         username=user.getString("name","null");
         email=user.getString("username","null");
+
         //Log.i("Latitude",user.getString("Latitude","null"));
         Latitude=Double.parseDouble(user.getString("Latitude","null"));
         Longitude=Double.parseDouble(user.getString("Longitude", "null"));
@@ -171,7 +172,19 @@ public class Home_screen extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         addListenerOnButton();
 
-}
+    }
+    public void locationsetter(View view){
+        Log.d("Noty flag value",notyflag+"");
+        Log.d("Email id",email+"");
+        Log.d("Job value",job+"");
+        if (notyflag==0) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Setting Your Location");
+            locationListenSet();
+            progressDialog.show();
+        }
+    }
+
     public void addListenerOnButton() {
         m = (Button) findViewById(R.id.docupload);
         m.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +201,6 @@ public class Home_screen extends AppCompatActivity {
                 goToGoogleMap(Latitude, Longitude,cuslat, cuslong);
             }
         });
-
 
 
 
@@ -225,6 +237,108 @@ public class Home_screen extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
+    }
+
+    void locationListenSet()
+    {
+        initializeLocationManager();
+        Home_screen.LocationListener[] mLocationListeners = new Home_screen.LocationListener[]{
+
+                new Home_screen.LocationListener(LocationManager.GPS_PROVIDER),
+                new LocationListener(LocationManager.NETWORK_PROVIDER)
+        };
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 100, 10f,
+                    mLocationListeners[1]);
+        } catch (java.lang.SecurityException ex) {
+            Log.e(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "network provider does not exist, " + ex.getMessage());
+        }
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,100, 10f,
+                    mLocationListeners[0]);
+        } catch (java.lang.SecurityException ex) {
+            Log.e(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "gps provider does not exist " + ex.getMessage());
+        }
+
+    }
+
+    private void initializeLocationManager() {
+        Log.e(TAG, "initializeLocationManager");
+        if (mLocationManager == null) {
+            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        }
+    }
+
+
+
+    public class LocationListener implements android.location.LocationListener {
+        public Location mLastLocation;
+        int i = 0;
+
+        public LocationListener(String provider) {
+            Log.e(TAG, "LocationListener " + provider);
+            mLastLocation = new Location(provider);
+
+        }
+
+        @Override
+        public void onLocationChanged(Location location)
+        {
+
+
+            Latitude=location.getLatitude();
+            Longitude=location.getLongitude();
+            progressDialog.dismiss();
+
+            myRef1 = database.getReference("Jobs");
+            myRef1=myRef1.child(job);
+            myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                        if ((postSnapshot.child("User").getValue(String.class)).equals(email)){
+                            Log.d("Found user",postSnapshot.getKey());
+                            myRef1.child(postSnapshot.getKey()).child("Loclatitude").setValue(Latitude+"");
+                            myRef1.child(postSnapshot.getKey()).child("Loclongitude").setValue(Longitude+"");
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            //Log.i("Latitude",latitude+"");
+            //Log.i("Longitude",longitude+"");
+            //progressDialog.dismiss();
+        }
+
+
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(TAG, "onProviderDisabled: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " + provider);
+        }
+
+
+
     }
 
 }

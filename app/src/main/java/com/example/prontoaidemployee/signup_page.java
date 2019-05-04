@@ -38,8 +38,6 @@ FirebaseAuth auth;
         setContentView(R.layout.activity_signup_page);
 
 
-
-
         FirebaseApp.initializeApp(this);
         auth = FirebaseAuth.getInstance();
 

@@ -48,7 +48,7 @@ public class FirstPage extends AppCompatActivity {
     Double latitude,longitude;
 
     public LocationManager mLocationManager = null;
-    Context context;
+
 
 
 
@@ -56,10 +56,10 @@ public class FirstPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         askPermission();
-        progressDialog=new ProgressDialog(this);
-        locationListenSet();
-        progressDialog.setMessage("Setting Your Location");
-        progressDialog.show();
+        //progressDialog=new ProgressDialog(this);
+        //locationListenSet();
+        //progressDialog.setMessage("Setting Your Location");
+        //progressDialog.show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("Customer");
 
@@ -76,6 +76,7 @@ public class FirstPage extends AppCompatActivity {
     }
 
     public void addListenerOnButton() {
+
         final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         flag = 0;
         final Context context = this;
@@ -92,6 +93,9 @@ public class FirstPage extends AppCompatActivity {
         r.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressDialog.setMessage("Loading");
+                progressDialog.show();
                 final String email = iemail.getText().toString();
                 ref_pic.edit().putString("username",email).commit();
                 final String password = ipassword.getText().toString();
@@ -129,13 +133,14 @@ public class FirstPage extends AppCompatActivity {
                                         //Log.i("Test4",flag+"");
                                         if (task.isSuccessful()) {
                                             flag = 1;
-                                            //progressDialog.dismiss();
+                                            progressDialog.dismiss();
                                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                                             final String job=postSnapshot.child("Occupation").getValue(String.class);
                                             final String location=postSnapshot.child("Location").getValue(String.class);
                                             final String name=postSnapshot.child("Name").getValue(String.class);
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
+                                            ref_pic.edit().putString("uid",postSnapshot.getKey()).commit();
                                             ref_pic.edit().putString("name",name).commit();
                                             myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
@@ -249,23 +254,7 @@ public class FirstPage extends AppCompatActivity {
         }
     }
 
-    public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
-    public int calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
-        double latDistance = Math.toRadians(userLat - venueLat);
-        double lngDistance = Math.toRadians(userLng - venueLng);
-
-        double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
-                (Math.cos(Math.toRadians(userLat))) *
-                        (Math.cos(Math.toRadians(venueLat))) *
-                        (Math.sin(lngDistance / 2)) *
-                        (Math.sin(lngDistance / 2));
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
-
-    }
 
     public class LocationListener implements android.location.LocationListener {
         public Location mLastLocation;
@@ -323,6 +312,10 @@ public class FirstPage extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(FirstPage.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {//Checking permission
+                progressDialog=new ProgressDialog(this);
+                locationListenSet();
+                progressDialog.setMessage("Setting Your Location");
+                progressDialog.show();
 
 
             } else {
@@ -340,6 +333,10 @@ public class FirstPage extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        progressDialog=new ProgressDialog(this);
+        locationListenSet();
+        progressDialog.setMessage("Setting Your Location");
+        progressDialog.show();
         Toast.makeText(this,"Permission Granted",Toast.LENGTH_LONG).show();
 
     }
