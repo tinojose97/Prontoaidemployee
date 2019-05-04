@@ -53,33 +53,7 @@ public class Home_screen extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            myRef = database.getReference("Assigned");
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    notyflag=0;
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-                        wname = postSnapshot.child("Worker_User").getValue(String.class);
-                        uname=getIntent().getStringExtra("for_user");
-                        if (uname.equals(wname)) {
-                            cusname = postSnapshot.child("Customer_Name").getValue(String.class);
-                            cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);
-                            cuslat =Double.parseDouble(postSnapshot.child("Customer_Latitude").getValue(String.class));
-                            cuslong=Double.parseDouble(postSnapshot.child("Customer_Longitude").getValue(String.class));
-                            address=getAddress(cuslat,cuslong);
-                            noty_msg = "You're service has been requested by "+cusname+" at "+address+" \nContact: "+cusnum;
-                            //tid=postSnapshot.getKey();
-                            notyflag=1;
-                        }
-                    }
-                    if (notyflag==0)
-                        noty_msg="No active jobs";
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
             switch (item.getItemId()) {
 
                 case R.id.navigation_home:
@@ -166,7 +140,33 @@ public class Home_screen extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         mTextMessage.setText("Welcome "+username);
 
+        myRef = database.getReference("Assigned");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                notyflag=0;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
+                    wname = postSnapshot.child("Worker_User").getValue(String.class);
+                    uname=getIntent().getStringExtra("for_user");
+                    if (uname.equals(wname)) {
+                        cusname = postSnapshot.child("Customer_Name").getValue(String.class);
+                        cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);
+                        cuslat =Double.parseDouble(postSnapshot.child("Customer_Latitude").getValue(String.class));
+                        cuslong=Double.parseDouble(postSnapshot.child("Customer_Longitude").getValue(String.class));
+                        address=getAddress(cuslat,cuslong);
+                        noty_msg = "You're service has been requested by "+cusname+" at "+address+" \nContact: "+cusnum;
+                        //tid=postSnapshot.getKey();
+                        notyflag=1;
+                    }
+                }
+                if (notyflag==0)
+                    noty_msg="No active jobs";
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

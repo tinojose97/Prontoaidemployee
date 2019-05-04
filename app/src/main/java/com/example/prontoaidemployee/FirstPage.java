@@ -159,7 +159,6 @@ public class FirstPage extends AppCompatActivity {
                                                     String uid = myRef1.push().getKey();
                                                     Map data = new HashMap();
                                                     data.put("User", email);
-                                                    data.put("Loc", location);
                                                     data.put("Emp_Name", name);
                                                     data.put("Phone_Number", phone);
                                                     data.put("Loclatitude",latitude+"");
