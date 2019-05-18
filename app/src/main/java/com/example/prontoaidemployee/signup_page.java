@@ -158,6 +158,9 @@ FirebaseAuth auth;
                                     myRef.child(number1+"").child("Username").setValue(email);
                                     myRef.child(number1+"").child("Occupation").setValue(job);
                                     myRef.child(number1+"").child("Location").setValue(location);
+                                    myRef.child(number1+"").child("AvgReview").setValue("5");
+                                    myRef.child(number1+"").child("NoReviews").setValue("0");
+                                    myRef.child(number1+"").child("Verifier").setValue("0");
                                     //myRef.child(number1+"").child("Available").setValue("Disconnected");
                                     //int number2=(int)dataSnapshot.getChildrenCount();
                                     //int number2=(int)dataSnapshot.getParent().child("Jobs").getChildre

@@ -38,7 +38,7 @@ public class Home_screen extends AppCompatActivity {
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
-    String wname,uname,noty_msg="No active jobs",cusname,cusnum,job,address;
+    String wname,uname,noty_msg="No active jobs",cusname,cusnum,job,address,verifier;
     double cuslat,cuslong;
     int notyflag=0;
     ProgressDialog progressDialog;
@@ -108,9 +108,10 @@ public class Home_screen extends AppCompatActivity {
                     ImageView i3 = (ImageView) findViewById(R.id.imageView2);
                     i3.setVisibility(View.VISIBLE);
                     TextView n2 = (TextView) findViewById(R.id.textView5);
-                    n2.setText(username);
+                    n2.setText(username+"\n"+email);
                     TextView e2 = (TextView) findViewById(R.id.textView6);
-                    e2.setText(email);
+                    e2.setText(verifier);
+
                     n2.setVisibility(View.VISIBLE);
                     e2.setVisibility(View.VISIBLE);
                     TextView e3 = (TextView) findViewById(R.id.message);
@@ -128,6 +129,8 @@ public class Home_screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this);
         job=getIntent().getStringExtra("for_job");
+        verifier=getIntent().getStringExtra("for_verifier");
+
         final SharedPreferences user=getSharedPreferences("picdtata" , MODE_PRIVATE);
         username=user.getString("name","null");
         email=user.getString("username","null");
@@ -139,6 +142,11 @@ public class Home_screen extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
         mTextMessage = (TextView) findViewById(R.id.message);
         mTextMessage.setText("Welcome "+username);
+
+        if (verifier.equals("0"))
+            verifier="Employee documents not verified";
+        else
+            verifier="";
 
         myRef = database.getReference("Assigned");
         myRef.addValueEventListener(new ValueEventListener() {

@@ -46,6 +46,7 @@ public class FirstPage extends AppCompatActivity {
     int flag = 0, number;
     ProgressDialog progressDialog;
     Double latitude,longitude;
+    String verifier;
 
     public LocationManager mLocationManager = null;
 
@@ -61,7 +62,7 @@ public class FirstPage extends AppCompatActivity {
         //progressDialog.setMessage("Setting Your Location");
         //progressDialog.show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("Customer");
+        //final DatabaseReference myRef = database.getReference("Customer");
 
 
         FirebaseApp.initializeApp(this);
@@ -133,21 +134,26 @@ public class FirstPage extends AppCompatActivity {
                                         //Log.i("Test4",flag+"");
                                         if (task.isSuccessful()) {
                                             flag = 1;
+                                            verifier=postSnapshot.child("Verifier").getValue(String.class);
                                             progressDialog.dismiss();
                                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                                             final String job=postSnapshot.child("Occupation").getValue(String.class);
-                                            final String location=postSnapshot.child("Location").getValue(String.class);
+                                            //final String location=postSnapshot.child("Location").getValue(String.class);
                                             final String name=postSnapshot.child("Name").getValue(String.class);
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
                                             ref_pic.edit().putString("uid",postSnapshot.getKey()).commit();
                                             ref_pic.edit().putString("name",name).commit();
-                                            myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    //int number1 = (int)dataSnapshot.child(job).getChildrenCount();
-                                                    //number1++;
-                                                    //myRef=myRef.getParent();
+                                            //Log.d("Verifier value",verifier);
+                                            if (verifier.equals("1")){
+                                                //Log.d("Verifier","verifieddddd");
+
+                                                myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        //int number1 = (int)dataSnapshot.child(job).getChildrenCount();
+                                                        //number1++;
+                                                        //myRef=myRef.getParent();
                                                     /*
                                                     myRef1.child(job).child(number1+"").child("User").setValue(email);
                                                     myRef1.child(job).child(number1+"").child("Loc").setValue(location);
@@ -156,34 +162,41 @@ public class FirstPage extends AppCompatActivity {
                                                     myRef1.child(job).child(number1+"").child("Phone_Number").setValue(phone);
                                                     myRef1.push().key;
                                                     */
-                                                    String uid = myRef1.push().getKey();
-                                                    Map data = new HashMap();
-                                                    data.put("User", email);
-                                                    data.put("Emp_Name", name);
-                                                    data.put("Phone_Number", phone);
-                                                    data.put("Loclatitude",latitude+"");
-                                                    data.put("Loclongitude",longitude+"");
-                                                    myRef1.child(job).child(uid).setValue(data);
-                                                    SharedPreferences.Editor refedit= ref_pic.edit();
-                                                    refedit.putString("Latitude",latitude+"");
-                                                    refedit.putString("Longitude",longitude+"");
-                                                    refedit.commit();
+                                                        String uid = myRef1.push().getKey();
+                                                        Map data = new HashMap();
+                                                        data.put("User", email);
+                                                        data.put("Emp_Name", name);
+                                                        data.put("Phone_Number", phone);
+                                                        data.put("Loclatitude", latitude + "");
+                                                        data.put("Loclongitude", longitude + "");
+                                                        myRef1.child(job).child(uid).setValue(data);
+                                                        SharedPreferences.Editor refedit = ref_pic.edit();
+                                                        refedit.putString("Latitude", latitude + "");
+                                                        refedit.putString("Longitude", longitude + "");
+                                                        refedit.commit();
 
-                                                    //myRef1.child(job).push({"User": "Hello", "Name": "World" });
-                                                    myRef1.child(job).child(uid).onDisconnect().removeValue();
-                                                    //if(myRef1.child())
-                                                    //int number2=(int)dataSnapshot.getChildrenCount();
-                                                    //int number2=(int)dataSnapshot.getParent().child("Jobs").getChildre
-                                                }
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                }
-                                            });
+                                                        //myRef1.child(job).push({"User": "Hello", "Name": "World" });
+                                                        myRef1.child(job).child(uid).onDisconnect().removeValue();
+                                                        //if(myRef1.child())
+                                                        //int number2=(int)dataSnapshot.getChildrenCount();
+                                                        //int number2=(int)dataSnapshot.getParent().child("Jobs").getChildre
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+                                                    }
+                                                });
+                                            }
+                                            
+                                            else{
+                                                Toast.makeText(FirstPage.this, "Document verification incomplete", Toast.LENGTH_SHORT).show();
+                                            }
 
                                             Intent intent = new Intent(FirstPage.this, Home_screen.class);
 
                                             intent.putExtra("for_user",uname);
                                             intent.putExtra("for_job",job);
+                                            intent.putExtra("for_verifier",verifier);
                                             startActivity(intent);
                                             finish();
                                         }
