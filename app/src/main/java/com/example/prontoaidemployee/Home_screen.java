@@ -72,6 +72,35 @@ public class Home_screen extends AppCompatActivity {
                     n.setVisibility(View.GONE);
                     e.setVisibility(View.GONE);
                     return true;
+                case R.id.navigation_pending:
+                    //change to the new view, change the whole block
+                    Button bloc1=(Button) findViewById(R.id.gpssetter);
+                    //mTextMessage.setVisibility(View.VISIBLE);
+                    //TextView e5 = (TextView) findViewById(R.id.message);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
+                    mTextMessage.setText(noty_msg);
+                    mTextMessage.setVisibility(View.VISIBLE);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
+
+                    Button m11 = (Button) findViewById(R.id.docupload);
+                    m11.setVisibility(View.GONE);
+                    Button map11 = (Button) findViewById(R.id.map);
+                    if (notyflag==1) {
+                        map11.setVisibility(View.VISIBLE);
+                        bloc1.setVisibility(View.GONE);
+                    }
+                    else {
+                        map11.setVisibility(View.GONE);
+                        bloc1.setVisibility(View.VISIBLE);
+                    }
+                    ImageView i21 = (ImageView) findViewById(R.id.imageView2);
+                    i21.setVisibility(View.GONE);
+                    TextView n11 = (TextView) findViewById(R.id.textView5);
+                    TextView e11 = (TextView) findViewById(R.id.textView6);
+                    n11.setVisibility(View.GONE);
+                    e11.setVisibility(View.GONE);
+
+                    return true;
 
                 case R.id.navigation_notification:
                     Button bloc=(Button) findViewById(R.id.gpssetter);
