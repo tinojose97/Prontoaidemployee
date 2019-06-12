@@ -73,6 +73,8 @@ public class Home_screen extends AppCompatActivity {
                     e.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_pending:
+
+                    /*
                     //change to the new view, change the whole block
                     Button bloc1=(Button) findViewById(R.id.gpssetter);
                     //mTextMessage.setVisibility(View.VISIBLE);
@@ -99,6 +101,13 @@ public class Home_screen extends AppCompatActivity {
                     TextView e11 = (TextView) findViewById(R.id.textView6);
                     n11.setVisibility(View.GONE);
                     e11.setVisibility(View.GONE);
+                    */
+                    Intent intent = new Intent(Home_screen.this, Pending.class);
+                    intent.putExtra("for_user",uname);
+                    intent.putExtra("for_job",job);
+                    intent.putExtra("for_verifier",verifier);
+                    startActivity(intent);
+                    finish();
 
                     return true;
 
