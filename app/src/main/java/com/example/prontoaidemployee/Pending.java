@@ -50,14 +50,19 @@ public class Pending extends AppCompatActivity {
 
                         Map reqd = (Map) postSnapshot.getValue();
                         //Log.d("Post Test",emp.toString());
-                        Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString());
+                        Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(),reqd.get("Job").toString());
                         activeRequest.add(e);
                         Log.d("Requests",e.DateBook+" "+e.TimeBook);
 
 
 
                         }
-                        Log.d("activereqs",activeRequest.size()+"");
+
+                    Log.d("activereqs",activeRequest.size()+"");
+                    ListView listView=(ListView)findViewById(R.id.listView);
+                    CustomAdapter customAdapter=new CustomAdapter();
+                    listView.setAdapter(customAdapter);
+                    Log.d("List View size",activeRequest.size()+"");
                     }
                 }
             @Override
@@ -65,10 +70,7 @@ public class Pending extends AppCompatActivity {
             }
         });
 
-        ListView listView=(ListView)findViewById(R.id.listView);
-        CustomAdapter customAdapter=new CustomAdapter();
-        listView.setAdapter(customAdapter);
-        Log.d("List View size",activeRequest.size()+"");
+
     }
 
     @Override
@@ -112,11 +114,11 @@ public class Pending extends AppCompatActivity {
             time=((Request)activeRequest.get(i)).getTime();
             loc=((Request)activeRequest.get(i)).getLocation();
             Log.d("Testing","Basic22");
-            textviewdate.setText(date);
+            textviewdate.setText("Date: "+date);
             //Log.d("Date ",date);
-            textviewtime.setText(time);
+            textviewtime.setText("Time: "+time);
             //Log.d("Time  ",time);
-            textviewloc.setText(loc);
+            textviewloc.setText("Address: "+loc);
             //Log.d("Location ",loc);
 
             return view;

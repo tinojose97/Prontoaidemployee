@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:textSize="24sp"
         android:id="@+id/textviewdate"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -14,17 +13,15 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="211dp"
         android:layout_marginRight="211dp"
-        android:layout_marginBottom="681dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textSize="24sp" />
 
     <TextView
-        android:textSize="24sp"
         android:id="@+id/textviewtime"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -33,30 +30,53 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="211dp"
         android:layout_marginLeft="211dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginBottom="681dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/textviewloc"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="617dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="99dp"
+        android:layout_marginRight="99dp"
         android:text="TextView"
         android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/buttonyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:text="Accept" />
+
+    <Button
+        android:id="@+id/buttonno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="111dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:text="Reject" />
 
 </RelativeLayout>
