@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public class Pending extends AppCompatActivity {
     DatabaseReference myRef;
     ArrayList activeRequest;
     String[] NAMES={"NIG B","ASDOASD","ASDASDASD","VHKSKPE","HFUIEJ"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +52,11 @@ public class Pending extends AppCompatActivity {
 
                         Map reqd = (Map) postSnapshot.getValue();
                         //Log.d("Post Test",emp.toString());
-                        Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(),reqd.get("Job").toString());
-                        activeRequest.add(e);
-                        Log.d("Requests",e.DateBook+" "+e.TimeBook);
+                        if (reqd.get("Job").equals(job)) {
+                            Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(), reqd.get("Job").toString());
+                            activeRequest.add(e);
+                            Log.d("Requests", e.DateBook + " " + e.TimeBook);
+                        }
 
 
 
@@ -89,7 +93,10 @@ public class Pending extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return activeRequest.size();
+            if (activeRequest.size()!=0)
+                return activeRequest.size();
+            else
+                return 1;
         }
 
         @Override
@@ -104,23 +111,38 @@ public class Pending extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            Log.d("Testing","Basic");
+            //Log.d("Testing","Basic");
             view=getLayoutInflater().inflate(R.layout.customlayout,null);
             TextView textviewdate=(TextView)view.findViewById(R.id.textviewdate);
             TextView textviewtime=(TextView)view.findViewById(R.id.textviewtime);
             TextView textviewloc=(TextView)view.findViewById(R.id.textviewloc);
-            Log.d("Testing","Basic22");
-            date=((Request)activeRequest.get(i)).getDate();
-            time=((Request)activeRequest.get(i)).getTime();
-            loc=((Request)activeRequest.get(i)).getLocation();
-            Log.d("Testing","Basic22");
-            textviewdate.setText("Date: "+date);
-            //Log.d("Date ",date);
-            textviewtime.setText("Time: "+time);
-            //Log.d("Time  ",time);
-            textviewloc.setText("Address: "+loc);
-            //Log.d("Location ",loc);
 
+            Button buttonyes=(Button)view.findViewById(R.id.buttonyes);
+            Button buttonno=(Button)view.findViewById(R.id.buttonno);
+            if (activeRequest.size()!=0){
+                buttonyes.setVisibility(View.VISIBLE);
+                buttonno.setVisibility(View.VISIBLE);
+
+                Log.d("Testing","Basic22");
+                date=((Request)activeRequest.get(i)).getDate();
+                time=((Request)activeRequest.get(i)).getTime();
+                loc=((Request)activeRequest.get(i)).getLocation();
+                Log.d("Testing","Basic22");
+                textviewdate.setText("Date: "+date);
+                //Log.d("Date ",date);
+                textviewtime.setText("Time: "+time);
+                //Log.d("Time  ",time);
+                textviewloc.setText("Address: "+loc);
+            }
+             else {
+                buttonyes.setVisibility(View.GONE);
+                buttonno.setVisibility(View.GONE);
+                textviewdate.setText("");
+                textviewtime.setText("");
+                textviewloc.setText("No Requests available");
+            }
+
+            //Log.d("Location ",loc);
             return view;
         }
     }
