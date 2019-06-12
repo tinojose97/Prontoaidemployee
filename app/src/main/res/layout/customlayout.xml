@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/textviewdate"
         android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/textviewtime"
         android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_alignTop="@+id/textviewdate"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -41,17 +41,17 @@
     <TextView
         android:id="@+id/textviewloc"
         android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="59dp"
-        android:layout_marginEnd="99dp"
-        android:layout_marginRight="99dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="96dp"
         android:text="TextView"
         android:textSize="24sp" />
 
@@ -62,7 +62,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="59dp"
+        android:layout_marginTop="42dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
         android:text="Accept" />
@@ -74,7 +74,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="111dp"
+        android:layout_marginTop="114dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
         android:text="Reject" />
