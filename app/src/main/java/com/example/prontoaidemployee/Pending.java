@@ -123,3 +123,7 @@ public class Pending extends AppCompatActivity {
         }
     }
 }
+
+//The list view works with other data types like String array
+//It is not working with the newly created test class Request
+//Initially the arraylist is created but at some point the arraylist becomes empty
