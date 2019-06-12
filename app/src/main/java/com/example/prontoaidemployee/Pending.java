@@ -26,6 +26,7 @@ public class Pending extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
     ArrayList activeRequest;
+    String[] NAMES={"NIG B","ASDOASD","ASDASDASD","VHKSKPE","HFUIEJ"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class Pending extends AppCompatActivity {
 
 
                         }
-                        Log.d("activereqs",activeRequest.toString());
+                        Log.d("activereqs",activeRequest.size()+"");
                     }
                 }
             @Override
@@ -67,6 +68,7 @@ public class Pending extends AppCompatActivity {
         ListView listView=(ListView)findViewById(R.id.listView);
         CustomAdapter customAdapter=new CustomAdapter();
         listView.setAdapter(customAdapter);
+        Log.d("List View size",activeRequest.size()+"");
     }
 
     @Override
@@ -100,19 +102,24 @@ public class Pending extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            Log.d("Testing","Basic");
             view=getLayoutInflater().inflate(R.layout.customlayout,null);
             TextView textviewdate=(TextView)view.findViewById(R.id.textviewdate);
             TextView textviewtime=(TextView)view.findViewById(R.id.textviewtime);
             TextView textviewloc=(TextView)view.findViewById(R.id.textviewloc);
+            Log.d("Testing","Basic22");
             date=((Request)activeRequest.get(i)).getDate();
             time=((Request)activeRequest.get(i)).getTime();
             loc=((Request)activeRequest.get(i)).getLocation();
-
+            Log.d("Testing","Basic22");
             textviewdate.setText(date);
+            //Log.d("Date ",date);
             textviewtime.setText(time);
+            //Log.d("Time  ",time);
             textviewloc.setText(loc);
+            //Log.d("Location ",loc);
 
-            return null;
+            return view;
         }
     }
 }
