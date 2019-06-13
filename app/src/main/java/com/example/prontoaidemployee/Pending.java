@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +29,8 @@ public class Pending extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
     ArrayList activeRequest;
-    String[] NAMES={"NIG B","ASDOASD","ASDASDASD","VHKSKPE","HFUIEJ"};
+    //String[] NAMES={"NIG B","ASDOASD","ASDASDASD","VHKSKPE","HFUIEJ"};
+    int j;
 
 
     @Override
@@ -66,6 +69,20 @@ public class Pending extends AppCompatActivity {
                     ListView listView=(ListView)findViewById(R.id.listView);
                     CustomAdapter customAdapter=new CustomAdapter();
                     listView.setAdapter(customAdapter);
+                    /*
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            //
+                            date=((Request)activeRequest.get(i)).getDate();
+                            time=((Request)activeRequest.get(i)).getTime();
+                            loc=((Request)activeRequest.get(i)).getLocation();
+                            Toast.makeText(Pending.this, date+", "+time+", "+loc, Toast.LENGTH_SHORT).show();
+
+
+
+                        }
+                    });*/
                     Log.d("List View size",activeRequest.size()+"");
                     }
                 }
@@ -111,6 +128,7 @@ public class Pending extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            j=i;
             //Log.d("Testing","Basic");
             view=getLayoutInflater().inflate(R.layout.customlayout,null);
             TextView textviewdate=(TextView)view.findViewById(R.id.textviewdate);
@@ -123,7 +141,7 @@ public class Pending extends AppCompatActivity {
                 buttonyes.setVisibility(View.VISIBLE);
                 buttonno.setVisibility(View.VISIBLE);
 
-                Log.d("Testing","Basic22");
+                //Log.d("Testing","Basic22");
                 date=((Request)activeRequest.get(i)).getDate();
                 time=((Request)activeRequest.get(i)).getTime();
                 loc=((Request)activeRequest.get(i)).getLocation();
@@ -142,7 +160,23 @@ public class Pending extends AppCompatActivity {
                 textviewloc.setText("No Requests available");
             }
 
+            buttonyes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Pending.this, "Job Accepted "+j, Toast.LENGTH_SHORT).show();
+                }
+            });
+            buttonno.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Pending.this, "Job Rejected "+j, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
             //Log.d("Location ",loc);
+
+
             return view;
         }
     }
