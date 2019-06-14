@@ -8,7 +8,7 @@ public class Request {
     String Job;
     String JobId;
     String CustomerUser;
-    String WorkerContact;
+
 
     public String getDate(){return  DateBook;}
 

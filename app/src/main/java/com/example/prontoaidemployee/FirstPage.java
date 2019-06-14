@@ -46,7 +46,7 @@ public class FirstPage extends AppCompatActivity {
     int flag = 0, number;
     ProgressDialog progressDialog;
     Double latitude,longitude;
-    String verifier;
+    String verifier,rating;
     SharedPreferences ref_pic;
     public LocationManager mLocationManager = null;
 
@@ -143,6 +143,7 @@ public class FirstPage extends AppCompatActivity {
                                             final String name=postSnapshot.child("Name").getValue(String.class);
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
+                                            rating=postSnapshot.child("AvgReview").getValue().toString();
                                             ref_pic.edit().putString("uid",postSnapshot.getKey()).commit();
                                             ref_pic.edit().putString("name",name).commit();
                                             //Log.d("Namers",ref_pic.getString("name","null"));
@@ -172,6 +173,7 @@ public class FirstPage extends AppCompatActivity {
                                                         data.put("Phone_Number", phone);
                                                         data.put("Loclatitude", latitude + "");
                                                         data.put("Loclongitude", longitude + "");
+                                                        data.put("Rating",rating);
                                                         myRef1.child(job).child(uid).setValue(data);
                                                         //SharedPreferences.Editor refedit = ref_pic.edit();
                                                         //refedit.putString("WorkerName",name);
