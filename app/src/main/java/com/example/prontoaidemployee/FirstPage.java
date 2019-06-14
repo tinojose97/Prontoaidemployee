@@ -47,7 +47,7 @@ public class FirstPage extends AppCompatActivity {
     ProgressDialog progressDialog;
     Double latitude,longitude;
     String verifier;
-
+    SharedPreferences ref_pic;
     public LocationManager mLocationManager = null;
 
 
@@ -56,7 +56,9 @@ public class FirstPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         askPermission();
+        ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         //progressDialog=new ProgressDialog(this);
         //locationListenSet();
         //progressDialog.setMessage("Setting Your Location");
@@ -78,7 +80,6 @@ public class FirstPage extends AppCompatActivity {
 
     public void addListenerOnButton() {
 
-        final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         flag = 0;
         final Context context = this;
         //progressDialog = new ProgressDialog(this);
@@ -144,6 +145,8 @@ public class FirstPage extends AppCompatActivity {
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
                                             ref_pic.edit().putString("uid",postSnapshot.getKey()).commit();
                                             ref_pic.edit().putString("name",name).commit();
+                                            //Log.d("Namers",ref_pic.getString("name","null"));
+                                            ref_pic.edit().putString("number",phone).commit();
                                             //Log.d("Verifier value",verifier);
                                             if (verifier.equals("1")){
                                                 //Log.d("Verifier","verifieddddd");
@@ -170,10 +173,13 @@ public class FirstPage extends AppCompatActivity {
                                                         data.put("Loclatitude", latitude + "");
                                                         data.put("Loclongitude", longitude + "");
                                                         myRef1.child(job).child(uid).setValue(data);
-                                                        SharedPreferences.Editor refedit = ref_pic.edit();
-                                                        refedit.putString("Latitude", latitude + "");
-                                                        refedit.putString("Longitude", longitude + "");
-                                                        refedit.commit();
+                                                        //SharedPreferences.Editor refedit = ref_pic.edit();
+                                                        //refedit.putString("WorkerName",name);
+                                                        Log.d("Broma",name);
+                                                        //refedit.putString("WorkerContact",phone);
+                                                        ref_pic.edit().putString("Latitude", latitude + "").commit();
+                                                        ref_pic.edit().putString("Longitude", longitude + "").commit();
+
 
                                                         //myRef1.child(job).push({"User": "Hello", "Name": "World" });
                                                         myRef1.child(job).child(uid).onDisconnect().removeValue();
@@ -287,11 +293,10 @@ public class FirstPage extends AppCompatActivity {
             longitude=location.getLongitude();
             progressDialog.dismiss();
 
-            final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
-            SharedPreferences.Editor refedit= ref_pic.edit();
-            refedit.putString("Latitude",latitude+"");
-            refedit.putString("Longitude",longitude+"");
-            refedit.commit();
+
+            ref_pic.edit().putString("Latitude",latitude+"").commit();
+            ref_pic.edit().putString("Longitude",longitude+"").commit();
+
 
             //Log.i("Latitude",latitude+"");
             //Log.i("Longitude",longitude+"");

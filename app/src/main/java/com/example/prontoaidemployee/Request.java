@@ -7,6 +7,8 @@ public class Request {
     String LocBook;
     String Job;
     String JobId;
+    String CustomerUser;
+    String WorkerContact;
 
     public String getDate(){return  DateBook;}
 
@@ -26,8 +28,11 @@ public class Request {
 
     public String getJobId(){return JobId;}
 
+    public String getCustomerUser(){return CustomerUser;}
 
-    public Request(String date, String time, String location, String job, String jobid ) {
+
+
+    public Request(String date, String time, String location, String job, String jobid,String customerUser ) {
 
 
         DateBook=date;
@@ -35,6 +40,8 @@ public class Request {
         LocBook = location;
         Job=job;
         JobId=jobid;
+        CustomerUser=customerUser;
+
 
 
     }

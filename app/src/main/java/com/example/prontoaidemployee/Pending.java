@@ -1,6 +1,7 @@
 package com.example.prontoaidemployee;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,11 +26,14 @@ import java.util.Map;
 
 public class Pending extends AppCompatActivity {
 
-    String job,verifier,uname,date,time,loc,jobid;
+    String job,verifier,uname,date,time,loc,jobid,name,phone;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef,myRef2,myRef3;
     ArrayList activeRequest;
     TextView textviewdate,textviewtime,textviewloc;
+    SharedPreferences sp;
+
+    int deluser;
 
 
 
@@ -37,6 +41,10 @@ public class Pending extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp=getSharedPreferences("picdtata",MODE_PRIVATE);
+        name=sp.getString("name","null");
+        phone=sp.getString("number","null");
+        Log.d("NameBro",name);
         job=getIntent().getStringExtra("for_job");
         verifier=getIntent().getStringExtra("for_verifier");
         uname=getIntent().getStringExtra("for_user");
@@ -63,7 +71,7 @@ public class Pending extends AppCompatActivity {
                         Log.d("JobKey",jobid);
                         //Log.d("Post Test",emp.toString());
                         if (reqd.get("Job").equals(job)) {
-                            Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(), reqd.get("Job").toString(),jobid);
+                            Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(), reqd.get("Job").toString(),jobid,reqd.get("CustomerUser").toString());
                             activeRequest.add(e);
                             Log.d("Requests", e.DateBook + " " + e.TimeBook);
                         }
@@ -179,42 +187,53 @@ public class Pending extends AppCompatActivity {
 
                     for(int j=0;j<activeRequest.size();j++){
 
-                        if (((Request)activeRequest.get(j)).getJobId().equals(jobid)){
+                        if (((Request)activeRequest.get(j)).getJobId().equals(textviewjobid.getText().toString())){
                             Map schedule=new HashMap();
                             schedule.put("DateBook",((Request)activeRequest.get(j)).getDate());
                             schedule.put("TimeBook",((Request)activeRequest.get(j)).getTime());
                             schedule.put("LocBook",((Request)activeRequest.get(j)).getLocation());
                             schedule.put("WorkerUser",uname);
+                            schedule.put("CustomerUser",((Request)activeRequest.get(j)).getCustomerUser());
+                            schedule.put("WorkerName",name);
+                            schedule.put("WorkerContact",phone);
+                            schedule.put("Job",job);
 
-                            myRef3.child(jobid).setValue(schedule);
+                            deluser=j;
+                            myRef3.child(textviewjobid.getText().toString()).setValue(schedule);
+                            notifyDataSetChanged();
 
                         }
                     }
+                    activeRequest.remove(deluser);
 
                     myRef2.child(textviewjobid.getText().toString()).removeValue();
-                    finish();
-                    startActivity(getIntent());
+                    //finish();
+                    //startActivity(getIntent());
                 }
             });
             buttonno.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(Pending.this, "Job Rejected", Toast.LENGTH_SHORT).show();
-                    myRef2.child(textviewjobid.getText().toString()).removeValue();
-                    finish();
-                    startActivity(getIntent());
+                    for(int j=0;j<activeRequest.size();j++){
+
+                        if (((Request)activeRequest.get(j)).getJobId().equals(textviewjobid.getText().toString())){
+                            deluser=j;
+                        }
+
+                    }
+                    activeRequest.remove(deluser);
+                    notifyDataSetChanged();
+                    //myRef2.child(textviewjobid.getText().toString()).removeValue();
+                    //finish();
+                    //startActivity(getIntent());
                 }
             });
-
-
-            //Log.d("Location ",loc);
-
 
             return view;
         }
     }
 }
-
 //The list view works with other data types like String array
 //It is not working with the newly created test class Request
 //Initially the arraylist is created but at some point the arraylist becomes empty

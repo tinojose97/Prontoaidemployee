@@ -167,7 +167,7 @@ public class Home_screen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uname=getIntent().getStringExtra("for_user");
-        Log.d("Usernaaame",uname);
+        //Log.d("Usernaaame",uname);
         progressDialog = new ProgressDialog(this);
         job=getIntent().getStringExtra("for_job");
         verifier=getIntent().getStringExtra("for_verifier");
