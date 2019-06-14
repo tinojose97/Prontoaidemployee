@@ -98,13 +98,13 @@ public class Pending extends AppCompatActivity {
                     });*/
                     Log.d("List View size",activeRequest.size()+"");
                     }
-                    else {
-                    activeRequest.clear();
+
+
                     ListView listView=(ListView)findViewById(R.id.listView);
                     CustomAdapter customAdapter=new CustomAdapter();
                     listView.setAdapter(customAdapter);
                     Log.d("activereqs123", activeRequest.size() + "");
-                }
+
                 }
             @Override
             public void onCancelled(DatabaseError databaseError) {

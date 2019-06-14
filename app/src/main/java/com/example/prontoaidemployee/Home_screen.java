@@ -75,6 +75,8 @@ public class Home_screen extends AppCompatActivity {
                     t7.setVisibility(View.GONE);
                     TextView t8 = (TextView) findViewById(R.id.textView8);
                     t8.setVisibility(View.GONE);
+                    Button b4 = (Button) findViewById(R.id.button2);
+                    b4.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_pending:
 
@@ -146,6 +148,8 @@ public class Home_screen extends AppCompatActivity {
                     t5.setVisibility(View.GONE);
                     TextView t4 = (TextView) findViewById(R.id.textView8);
                     t4.setVisibility(View.GONE);
+                    Button b3 = (Button) findViewById(R.id.button2);
+                    b3.setVisibility(View.GONE);
 
                     return true;
                 case R.id.navigation_profile:
@@ -169,6 +173,8 @@ public class Home_screen extends AppCompatActivity {
                     e3.setVisibility(View.GONE);
                     Button map2 = (Button) findViewById(R.id.map);
                     map2.setVisibility(View.GONE);
+                    Button b2 = (Button) findViewById(R.id.button2);
+                    b2.setVisibility(View.VISIBLE);
                     return true;
             }
             return false;
