@@ -41,6 +41,8 @@ public class Pending extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //final TextView textView=(TextView)findViewById(R.id.textviewloc);
+        //textView.setText("No Requests available");
         sp=getSharedPreferences("picdtata",MODE_PRIVATE);
         name=sp.getString("name","null");
         phone=sp.getString("number","null");
@@ -54,7 +56,7 @@ public class Pending extends AppCompatActivity {
         myRef=database.getReference("Requesting");
         myRef2=database.getReference("Requesting");
         myRef3 = database.getReference("Schedule_Assigned");
-
+        //activeRequest.clear();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -79,9 +81,7 @@ public class Pending extends AppCompatActivity {
                         }
 
                     Log.d("activereqs",activeRequest.size()+"");
-                    ListView listView=(ListView)findViewById(R.id.listView);
-                    CustomAdapter customAdapter=new CustomAdapter();
-                    listView.setAdapter(customAdapter);
+
                     /*
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -98,6 +98,13 @@ public class Pending extends AppCompatActivity {
                     });*/
                     Log.d("List View size",activeRequest.size()+"");
                     }
+                    else {
+                    activeRequest.clear();
+                    ListView listView=(ListView)findViewById(R.id.listView);
+                    CustomAdapter customAdapter=new CustomAdapter();
+                    listView.setAdapter(customAdapter);
+                    Log.d("activereqs123", activeRequest.size() + "");
+                }
                 }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -143,7 +150,7 @@ public class Pending extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             //Log.d("Testing","Basic");
-
+            Log.d("Requestiont",activeRequest.size()+"");
             view=getLayoutInflater().inflate(R.layout.customlayout,null);
 
             textviewdate=(TextView)view.findViewById(R.id.textviewdate);
@@ -171,6 +178,7 @@ public class Pending extends AppCompatActivity {
                 textviewjobid.setText(jobid);
             }
              else {
+
                 buttonyes.setVisibility(View.GONE);
                 buttonno.setVisibility(View.GONE);
                 textviewdate.setText("");
