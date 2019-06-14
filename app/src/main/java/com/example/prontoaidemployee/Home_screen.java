@@ -71,6 +71,10 @@ public class Home_screen extends AppCompatActivity {
                     TextView e = (TextView) findViewById(R.id.textView6);
                     n.setVisibility(View.GONE);
                     e.setVisibility(View.GONE);
+                    TextView t7 = (TextView) findViewById(R.id.textView7);
+                    t7.setVisibility(View.GONE);
+                    TextView t8 = (TextView) findViewById(R.id.textView8);
+                    t8.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_pending:
 
@@ -138,6 +142,10 @@ public class Home_screen extends AppCompatActivity {
                     TextView e1 = (TextView) findViewById(R.id.textView6);
                     n1.setVisibility(View.GONE);
                     e1.setVisibility(View.GONE);
+                    TextView t5 = (TextView) findViewById(R.id.textView7);
+                    t5.setVisibility(View.GONE);
+                    TextView t4 = (TextView) findViewById(R.id.textView8);
+                    t4.setVisibility(View.GONE);
 
                     return true;
                 case R.id.navigation_profile:
@@ -150,6 +158,10 @@ public class Home_screen extends AppCompatActivity {
                     n2.setText(username+"\n"+email);
                     TextView e2 = (TextView) findViewById(R.id.textView6);
                     e2.setText(verifier);
+                    TextView t3 = (TextView) findViewById(R.id.textView7);
+                    t3.setVisibility(View.VISIBLE);
+                    TextView t9 = (TextView) findViewById(R.id.textView8);
+                    t9 .setVisibility(View.VISIBLE);
 
                     n2.setVisibility(View.VISIBLE);
                     e2.setVisibility(View.VISIBLE);
