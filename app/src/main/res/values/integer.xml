@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="buttonyes_view">1</integer>
+    <integer name="buttonyes_pos">2</integer>
+    <integer name="buttonno_view">3</integer>
+    <integer name="buttonno_pos">4</integer>
+</resources>

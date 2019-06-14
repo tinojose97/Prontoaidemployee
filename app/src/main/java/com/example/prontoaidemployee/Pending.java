@@ -61,8 +61,6 @@ public class Pending extends AppCompatActivity {
                             Log.d("Requests", e.DateBook + " " + e.TimeBook);
                         }
 
-
-
                         }
 
                     Log.d("activereqs",activeRequest.size()+"");
