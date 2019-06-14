@@ -25,12 +25,13 @@ import java.util.Map;
 
 public class Pending extends AppCompatActivity {
 
-    String job,verifier,uname,date,time,loc;
+    String job,verifier,uname,date,time,loc,jobid;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef;
+    DatabaseReference myRef,myRef2,myRef3;
     ArrayList activeRequest;
-    //String[] NAMES={"NIG B","ASDOASD","ASDASDASD","VHKSKPE","HFUIEJ"};
-    int j;
+    TextView textviewdate,textviewtime,textviewloc;
+
+
 
 
     @Override
@@ -39,9 +40,13 @@ public class Pending extends AppCompatActivity {
         job=getIntent().getStringExtra("for_job");
         verifier=getIntent().getStringExtra("for_verifier");
         uname=getIntent().getStringExtra("for_user");
+        //Log.d("Usernaaame",uname);
         setContentView(R.layout.activity_pending);
         activeRequest = new ArrayList<Request>();
         myRef=database.getReference("Requesting");
+        myRef2=database.getReference("Requesting");
+        myRef3 = database.getReference("Schedule_Assigned");
+
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -54,9 +59,11 @@ public class Pending extends AppCompatActivity {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                         Map reqd = (Map) postSnapshot.getValue();
+                        jobid=postSnapshot.getKey();
+                        Log.d("JobKey",jobid);
                         //Log.d("Post Test",emp.toString());
                         if (reqd.get("Job").equals(job)) {
-                            Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(), reqd.get("Job").toString());
+                            Request e = new Request(reqd.get("DateBook").toString(), reqd.get("TimeBook").toString(), reqd.get("LocBook").toString(), reqd.get("Job").toString(),jobid);
                             activeRequest.add(e);
                             Log.d("Requests", e.DateBook + " " + e.TimeBook);
                         }
@@ -126,13 +133,16 @@ public class Pending extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            j=i;
-            //Log.d("Testing","Basic");
-            view=getLayoutInflater().inflate(R.layout.customlayout,null);
-            TextView textviewdate=(TextView)view.findViewById(R.id.textviewdate);
-            TextView textviewtime=(TextView)view.findViewById(R.id.textviewtime);
-            TextView textviewloc=(TextView)view.findViewById(R.id.textviewloc);
 
+            //Log.d("Testing","Basic");
+
+            view=getLayoutInflater().inflate(R.layout.customlayout,null);
+
+            textviewdate=(TextView)view.findViewById(R.id.textviewdate);
+            textviewtime=(TextView)view.findViewById(R.id.textviewtime);
+            textviewloc=(TextView)view.findViewById(R.id.textviewloc);
+            final TextView textviewjobid=view.findViewById(R.id.jobid);
+            textviewjobid.setVisibility(View.GONE);
             Button buttonyes=(Button)view.findViewById(R.id.buttonyes);
             Button buttonno=(Button)view.findViewById(R.id.buttonno);
             if (activeRequest.size()!=0){
@@ -143,12 +153,14 @@ public class Pending extends AppCompatActivity {
                 date=((Request)activeRequest.get(i)).getDate();
                 time=((Request)activeRequest.get(i)).getTime();
                 loc=((Request)activeRequest.get(i)).getLocation();
+                jobid=((Request)activeRequest.get(i)).getJobId();
                 Log.d("Testing","Basic22");
                 textviewdate.setText("Date: "+date);
                 //Log.d("Date ",date);
                 textviewtime.setText("Time: "+time);
                 //Log.d("Time  ",time);
                 textviewloc.setText("Address: "+loc);
+                textviewjobid.setText(jobid);
             }
              else {
                 buttonyes.setVisibility(View.GONE);
@@ -161,13 +173,36 @@ public class Pending extends AppCompatActivity {
             buttonyes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Pending.this, "Job Accepted "+j, Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(Pending.this, "Job Accepted", Toast.LENGTH_SHORT).show();
+
+
+                    for(int j=0;j<activeRequest.size();j++){
+
+                        if (((Request)activeRequest.get(j)).getJobId().equals(jobid)){
+                            Map schedule=new HashMap();
+                            schedule.put("DateBook",((Request)activeRequest.get(j)).getDate());
+                            schedule.put("TimeBook",((Request)activeRequest.get(j)).getTime());
+                            schedule.put("LocBook",((Request)activeRequest.get(j)).getLocation());
+                            schedule.put("WorkerUser",uname);
+
+                            myRef3.child(jobid).setValue(schedule);
+
+                        }
+                    }
+
+                    myRef2.child(textviewjobid.getText().toString()).removeValue();
+                    finish();
+                    startActivity(getIntent());
                 }
             });
             buttonno.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Pending.this, "Job Rejected "+j, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Pending.this, "Job Rejected", Toast.LENGTH_SHORT).show();
+                    myRef2.child(textviewjobid.getText().toString()).removeValue();
+                    finish();
+                    startActivity(getIntent());
                 }
             });
 

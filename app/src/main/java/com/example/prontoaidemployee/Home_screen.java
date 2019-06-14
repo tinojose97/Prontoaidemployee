@@ -104,6 +104,7 @@ public class Home_screen extends AppCompatActivity {
                     */
                     Intent intent = new Intent(Home_screen.this, Pending.class);
                     intent.putExtra("for_user",uname);
+                    //Log.d("USernaame",uname);
                     intent.putExtra("for_job",job);
                     intent.putExtra("for_verifier",verifier);
                     startActivity(intent);
@@ -165,6 +166,8 @@ public class Home_screen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uname=getIntent().getStringExtra("for_user");
+        Log.d("Usernaaame",uname);
         progressDialog = new ProgressDialog(this);
         job=getIntent().getStringExtra("for_job");
         verifier=getIntent().getStringExtra("for_verifier");
@@ -194,7 +197,8 @@ public class Home_screen extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     wname = postSnapshot.child("Worker_User").getValue(String.class);
-                    uname=getIntent().getStringExtra("for_user");
+
+
                     if (uname.equals(wname)) {
                         cusname = postSnapshot.child("Customer_Name").getValue(String.class);
                         cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);

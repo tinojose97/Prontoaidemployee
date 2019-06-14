@@ -6,6 +6,7 @@ public class Request {
     String TimeBook;
     String LocBook;
     String Job;
+    String JobId;
 
     public String getDate(){return  DateBook;}
 
@@ -23,14 +24,17 @@ public class Request {
 
     public void setJob(String job) {     Job= job; }
 
+    public String getJobId(){return JobId;}
 
-    public Request(String date, String time, String location, String job ) {
+
+    public Request(String date, String time, String location, String job, String jobid ) {
 
 
         DateBook=date;
         TimeBook=time;
         LocBook = location;
         Job=job;
+        JobId=jobid;
 
 
     }
