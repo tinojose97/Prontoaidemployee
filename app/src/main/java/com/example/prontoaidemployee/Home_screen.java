@@ -44,6 +44,7 @@ public class Home_screen extends AppCompatActivity {
     ProgressDialog progressDialog;
     private TextView mTextMessage;
     public LocationManager mLocationManager = null;
+    SharedPreferences user;
 
 
 
@@ -109,10 +110,10 @@ public class Home_screen extends AppCompatActivity {
                     e11.setVisibility(View.GONE);
                     */
                     Intent intent = new Intent(Home_screen.this, Pending.class);
-                    intent.putExtra("for_user",uname);
+                    //intent.putExtra("for_user",uname);
                     //Log.d("USernaame",uname);
-                    intent.putExtra("for_job",job);
-                    intent.putExtra("for_verifier",verifier);
+                    //intent.putExtra("for_job",job);
+                    //intent.putExtra("for_verifier",verifier);
                     startActivity(intent);
                     finish();
 
@@ -184,13 +185,16 @@ public class Home_screen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uname=getIntent().getStringExtra("for_user");
+        user=getSharedPreferences("picdtata" , MODE_PRIVATE);
+
         //Log.d("Usernaaame",uname);
         progressDialog = new ProgressDialog(this);
-        job=getIntent().getStringExtra("for_job");
-        verifier=getIntent().getStringExtra("for_verifier");
+        uname=user.getString("for_user","null");
+        job=user.getString("for_job","null");
+        verifier=user.getString("for_verifier","null");
 
-        final SharedPreferences user=getSharedPreferences("picdtata" , MODE_PRIVATE);
+
+
         username=user.getString("name","null");
         email=user.getString("username","null");
 

@@ -47,9 +47,9 @@ public class Pending extends AppCompatActivity {
         name=sp.getString("name","null");
         phone=sp.getString("number","null");
         Log.d("NameBro",name);
-        job=getIntent().getStringExtra("for_job");
-        verifier=getIntent().getStringExtra("for_verifier");
-        uname=getIntent().getStringExtra("for_user");
+        uname=sp.getString("for_user","null");
+        job=sp.getString("for_job","null");
+        verifier=sp.getString("for_verifier","null");
         //Log.d("Usernaaame",uname);
         setContentView(R.layout.activity_pending);
         activeRequest = new ArrayList<Request>();
@@ -160,7 +160,10 @@ public class Pending extends AppCompatActivity {
             textviewjobid.setVisibility(View.GONE);
             Button buttonyes=(Button)view.findViewById(R.id.buttonyes);
             Button buttonno=(Button)view.findViewById(R.id.buttonno);
-            if (activeRequest.size()!=0){
+            Log.d("Verifier",verifier);
+            Log.d("ActiveReqssss",activeRequest.size()+"");
+            if (activeRequest.size()!=0 && verifier.equals("1")){
+                Toast.makeText(Pending.this, "Yes Req", Toast.LENGTH_SHORT).show();
                 buttonyes.setVisibility(View.VISIBLE);
                 buttonno.setVisibility(View.VISIBLE);
 
@@ -178,7 +181,7 @@ public class Pending extends AppCompatActivity {
                 textviewjobid.setText(jobid);
             }
              else {
-
+                Toast.makeText(Pending.this, "No Req", Toast.LENGTH_SHORT).show();
                 buttonyes.setVisibility(View.GONE);
                 buttonno.setVisibility(View.GONE);
                 textviewdate.setText("");

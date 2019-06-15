@@ -201,10 +201,12 @@ public class FirstPage extends AppCompatActivity {
                                             }
 
                                             Intent intent = new Intent(FirstPage.this, Home_screen.class);
-
-                                            intent.putExtra("for_user",uname);
+                                            ref_pic.edit().putString("for_user",uname).commit();
+                                            ref_pic.edit().putString("for_job",job).commit();
+                                            ref_pic.edit().putString("for_verifier",verifier).commit();
+                                            /*intent.putExtra("for_user",uname);
                                             intent.putExtra("for_job",job);
-                                            intent.putExtra("for_verifier",verifier);
+                                            intent.putExtra("for_verifier",verifier);*/
                                             startActivity(intent);
                                             finish();
                                         }
