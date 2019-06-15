@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class Home_screen extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef,myRef1;
+    DatabaseReference myRef,myRef1,myRef2;
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
@@ -44,6 +44,7 @@ public class Home_screen extends AppCompatActivity {
     ProgressDialog progressDialog;
     private TextView mTextMessage;
     public LocationManager mLocationManager = null;
+    SharedPreferences user;
 
 
 
@@ -71,6 +72,51 @@ public class Home_screen extends AppCompatActivity {
                     TextView e = (TextView) findViewById(R.id.textView6);
                     n.setVisibility(View.GONE);
                     e.setVisibility(View.GONE);
+                    TextView t7 = (TextView) findViewById(R.id.textView7);
+                    t7.setVisibility(View.GONE);
+                    TextView t8 = (TextView) findViewById(R.id.textView8);
+                    t8.setVisibility(View.GONE);
+                    Button b4 = (Button) findViewById(R.id.signout);
+                    b4.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_pending:
+
+                    /*
+                    //change to the new view, change the whole block
+                    Button bloc1=(Button) findViewById(R.id.gpssetter);
+                    //mTextMessage.setVisibility(View.VISIBLE);
+                    //TextView e5 = (TextView) findViewById(R.id.message);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
+                    mTextMessage.setText(noty_msg);
+                    mTextMessage.setVisibility(View.VISIBLE);
+                    //mTextMessage = (TextView) findViewById(R.id.message);
+
+                    Button m11 = (Button) findViewById(R.id.docupload);
+                    m11.setVisibility(View.GONE);
+                    Button map11 = (Button) findViewById(R.id.map);
+                    if (notyflag==1) {
+                        map11.setVisibility(View.VISIBLE);
+                        bloc1.setVisibility(View.GONE);
+                    }
+                    else {
+                        map11.setVisibility(View.GONE);
+                        bloc1.setVisibility(View.VISIBLE);
+                    }
+                    ImageView i21 = (ImageView) findViewById(R.id.imageView2);
+                    i21.setVisibility(View.GONE);
+                    TextView n11 = (TextView) findViewById(R.id.textView5);
+                    TextView e11 = (TextView) findViewById(R.id.textView6);
+                    n11.setVisibility(View.GONE);
+                    e11.setVisibility(View.GONE);
+                    */
+                    Intent intent = new Intent(Home_screen.this, Pending.class);
+                    //intent.putExtra("for_user",uname);
+                    //Log.d("USernaame",uname);
+                    //intent.putExtra("for_job",job);
+                    //intent.putExtra("for_verifier",verifier);
+                    startActivity(intent);
+                    finish();
+
                     return true;
 
                 case R.id.navigation_notification:
@@ -99,6 +145,12 @@ public class Home_screen extends AppCompatActivity {
                     TextView e1 = (TextView) findViewById(R.id.textView6);
                     n1.setVisibility(View.GONE);
                     e1.setVisibility(View.GONE);
+                    TextView t5 = (TextView) findViewById(R.id.textView7);
+                    t5.setVisibility(View.GONE);
+                    TextView t4 = (TextView) findViewById(R.id.textView8);
+                    t4.setVisibility(View.GONE);
+                    Button b3 = (Button) findViewById(R.id.signout);
+                    b3.setVisibility(View.GONE);
 
                     return true;
                 case R.id.navigation_profile:
@@ -111,6 +163,10 @@ public class Home_screen extends AppCompatActivity {
                     n2.setText(username+"\n"+email);
                     TextView e2 = (TextView) findViewById(R.id.textView6);
                     e2.setText(verifier);
+                    TextView t3 = (TextView) findViewById(R.id.textView7);
+                    t3.setVisibility(View.VISIBLE);
+                    TextView t9 = (TextView) findViewById(R.id.textView8);
+                    t9 .setVisibility(View.VISIBLE);
 
                     n2.setVisibility(View.VISIBLE);
                     e2.setVisibility(View.VISIBLE);
@@ -118,6 +174,8 @@ public class Home_screen extends AppCompatActivity {
                     e3.setVisibility(View.GONE);
                     Button map2 = (Button) findViewById(R.id.map);
                     map2.setVisibility(View.GONE);
+                    Button b2 = (Button) findViewById(R.id.signout);
+                    b2.setVisibility(View.VISIBLE);
                     return true;
             }
             return false;
@@ -127,11 +185,16 @@ public class Home_screen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        progressDialog = new ProgressDialog(this);
-        job=getIntent().getStringExtra("for_job");
-        verifier=getIntent().getStringExtra("for_verifier");
+        user=getSharedPreferences("picdtata" , MODE_PRIVATE);
 
-        final SharedPreferences user=getSharedPreferences("picdtata" , MODE_PRIVATE);
+        //Log.d("Usernaaame",uname);
+        progressDialog = new ProgressDialog(this);
+        uname=user.getString("for_user","null");
+        job=user.getString("for_job","null");
+        verifier=user.getString("for_verifier","null");
+
+
+
         username=user.getString("name","null");
         email=user.getString("username","null");
 
@@ -156,7 +219,8 @@ public class Home_screen extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     wname = postSnapshot.child("Worker_User").getValue(String.class);
-                    uname=getIntent().getStringExtra("for_user");
+
+
                     if (uname.equals(wname)) {
                         cusname = postSnapshot.child("Customer_Name").getValue(String.class);
                         cusnum = postSnapshot.child("Customer_Contact").getValue(String.class);
@@ -351,6 +415,31 @@ public class Home_screen extends AppCompatActivity {
 
 
 
+    }
+
+    public void logOut(View view){
+        myRef2=database.getReference("Jobs");
+        myRef2=myRef2.child(job);
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    if ((postSnapshot.child("User").getValue().toString()).equals(uname)){
+                        myRef2.child(postSnapshot.getKey()).removeValue();
+                        finish();
+                        Intent intent = new Intent(Home_screen.this, FirstPage.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

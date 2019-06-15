@@ -46,8 +46,8 @@ public class FirstPage extends AppCompatActivity {
     int flag = 0, number;
     ProgressDialog progressDialog;
     Double latitude,longitude;
-    String verifier;
-
+    String verifier,rating;
+    SharedPreferences ref_pic;
     public LocationManager mLocationManager = null;
 
 
@@ -56,7 +56,9 @@ public class FirstPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         askPermission();
+        ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         //progressDialog=new ProgressDialog(this);
         //locationListenSet();
         //progressDialog.setMessage("Setting Your Location");
@@ -78,7 +80,6 @@ public class FirstPage extends AppCompatActivity {
 
     public void addListenerOnButton() {
 
-        final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
         flag = 0;
         final Context context = this;
         //progressDialog = new ProgressDialog(this);
@@ -142,8 +143,11 @@ public class FirstPage extends AppCompatActivity {
                                             final String name=postSnapshot.child("Name").getValue(String.class);
                                             final String phone=postSnapshot.child("Phone_Number").getValue(String.class);
                                             final DatabaseReference myRef1 = database.getReference("Jobs");
+                                            rating=postSnapshot.child("AvgReview").getValue().toString();
                                             ref_pic.edit().putString("uid",postSnapshot.getKey()).commit();
                                             ref_pic.edit().putString("name",name).commit();
+                                            //Log.d("Namers",ref_pic.getString("name","null"));
+                                            ref_pic.edit().putString("number",phone).commit();
                                             //Log.d("Verifier value",verifier);
                                             if (verifier.equals("1")){
                                                 //Log.d("Verifier","verifieddddd");
@@ -169,11 +173,15 @@ public class FirstPage extends AppCompatActivity {
                                                         data.put("Phone_Number", phone);
                                                         data.put("Loclatitude", latitude + "");
                                                         data.put("Loclongitude", longitude + "");
+                                                        data.put("Rating",rating);
                                                         myRef1.child(job).child(uid).setValue(data);
-                                                        SharedPreferences.Editor refedit = ref_pic.edit();
-                                                        refedit.putString("Latitude", latitude + "");
-                                                        refedit.putString("Longitude", longitude + "");
-                                                        refedit.commit();
+                                                        //SharedPreferences.Editor refedit = ref_pic.edit();
+                                                        //refedit.putString("WorkerName",name);
+                                                        Log.d("Broma",name);
+                                                        //refedit.putString("WorkerContact",phone);
+                                                        ref_pic.edit().putString("Latitude", latitude + "").commit();
+                                                        ref_pic.edit().putString("Longitude", longitude + "").commit();
+
 
                                                         //myRef1.child(job).push({"User": "Hello", "Name": "World" });
                                                         myRef1.child(job).child(uid).onDisconnect().removeValue();
@@ -193,10 +201,12 @@ public class FirstPage extends AppCompatActivity {
                                             }
 
                                             Intent intent = new Intent(FirstPage.this, Home_screen.class);
-
-                                            intent.putExtra("for_user",uname);
+                                            ref_pic.edit().putString("for_user",uname).commit();
+                                            ref_pic.edit().putString("for_job",job).commit();
+                                            ref_pic.edit().putString("for_verifier",verifier).commit();
+                                            /*intent.putExtra("for_user",uname);
                                             intent.putExtra("for_job",job);
-                                            intent.putExtra("for_verifier",verifier);
+                                            intent.putExtra("for_verifier",verifier);*/
                                             startActivity(intent);
                                             finish();
                                         }
@@ -287,11 +297,10 @@ public class FirstPage extends AppCompatActivity {
             longitude=location.getLongitude();
             progressDialog.dismiss();
 
-            final SharedPreferences ref_pic=getSharedPreferences("picdtata" , MODE_PRIVATE);
-            SharedPreferences.Editor refedit= ref_pic.edit();
-            refedit.putString("Latitude",latitude+"");
-            refedit.putString("Longitude",longitude+"");
-            refedit.commit();
+
+            ref_pic.edit().putString("Latitude",latitude+"").commit();
+            ref_pic.edit().putString("Longitude",longitude+"").commit();
+
 
             //Log.i("Latitude",latitude+"");
             //Log.i("Longitude",longitude+"");

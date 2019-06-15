@@ -10,6 +10,11 @@
         android:id="@+id/navigation_notification"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Notifications" />
+    <item
+        android:id="@+id/navigation_pending"
+        android:icon="@drawable/ic_stat_name"
+        android:title="Pending" />
+
 
     <item
         android:id="@+id/navigation_profile"
