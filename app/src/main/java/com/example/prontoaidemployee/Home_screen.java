@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class Home_screen extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef,myRef1;
+    DatabaseReference myRef,myRef1,myRef2;
     Button m,map;
     Double Latitude,Longitude;
     String username,email,TAG="ggfhgfh";
@@ -76,7 +76,7 @@ public class Home_screen extends AppCompatActivity {
                     t7.setVisibility(View.GONE);
                     TextView t8 = (TextView) findViewById(R.id.textView8);
                     t8.setVisibility(View.GONE);
-                    Button b4 = (Button) findViewById(R.id.button2);
+                    Button b4 = (Button) findViewById(R.id.signout);
                     b4.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_pending:
@@ -149,7 +149,7 @@ public class Home_screen extends AppCompatActivity {
                     t5.setVisibility(View.GONE);
                     TextView t4 = (TextView) findViewById(R.id.textView8);
                     t4.setVisibility(View.GONE);
-                    Button b3 = (Button) findViewById(R.id.button2);
+                    Button b3 = (Button) findViewById(R.id.signout);
                     b3.setVisibility(View.GONE);
 
                     return true;
@@ -174,7 +174,7 @@ public class Home_screen extends AppCompatActivity {
                     e3.setVisibility(View.GONE);
                     Button map2 = (Button) findViewById(R.id.map);
                     map2.setVisibility(View.GONE);
-                    Button b2 = (Button) findViewById(R.id.button2);
+                    Button b2 = (Button) findViewById(R.id.signout);
                     b2.setVisibility(View.VISIBLE);
                     return true;
             }
@@ -415,6 +415,31 @@ public class Home_screen extends AppCompatActivity {
 
 
 
+    }
+
+    public void logOut(View view){
+        myRef2=database.getReference("Jobs");
+        myRef2=myRef2.child(job);
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    if ((postSnapshot.child("User").getValue().toString()).equals(uname)){
+                        myRef2.child(postSnapshot.getKey()).removeValue();
+                        finish();
+                        Intent intent = new Intent(Home_screen.this, FirstPage.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
